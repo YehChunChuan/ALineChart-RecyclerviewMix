@@ -32,6 +32,12 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParser;
+
+
 public class MainActivity extends AppCompatActivity {
     String TAG = MainActivity.class.getSimpleName()+"My";
     ArrayList<HashMap<String,String>> arrayList = new ArrayList<>();
@@ -113,13 +119,18 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void catchData(){
-        String catchData = "https://opendata.cwb.gov.tw/api/v1/rest/datastore/F-C0032-001?Authorization=CWB-E7D4764E-1727-4CE0-93C7-B6CA2298EF6D&format=JSON&locationName=%E5%BD%B0%E5%8C%96%E7%B8%A3&sort=time&startTime=";
-
+        String catchData = "https://opendata.cwb.gov.tw/api/v1/rest/datastore/F-C0032-001?Authorization=CWB-E7D4764E-1727-4CE0-93C7-B6CA2298EF6D&format=JSON&locationName=%E8%87%BA%E5%8C%97%E5%B8%82&sort=time&startTime=";
+        //台北市的URL
+        //https://opendata.cwb.gov.tw/api/v1/rest/datastore/F-C0032-001?Authorization=CWB-E7D4764E-1727-4CE0-93C7-B6CA2298EF6D&format=JSON&locationName=%E8%87%BA%E5%8C%97%E5%B8%82&sort=time&startTime=
+        //https://opendata.cwb.gov.tw/api/v1/rest/datastore/F-D0047-069?Authorization=CWB-E7D4764E-1727-4CE0-93C7-B6CA2298EF6D&format=JSON&elementName=Wx,AT,CI,WS,Td
+        //https://opendata.cwb.gov.tw/api/v1/rest/datastore/F-D0047-093?Authorization=CWB-E7D4764E-1727-4CE0-93C7-B6CA2298EF6D&locationId=F-D0047-063
         //台南的URL
+        //https://opendata.cwb.gov.tw/api/v1/rest/datastore/F-C0032-001?Authorization=CWB-E7D4764E-1727-4CE0-93C7-B6CA2298EF6D&format=JSON&locationName=%E5%8F%B0%E5%8D%97%E5%B8%82&elementName=&sort=time&startTime=
         //https://opendata.cwb.gov.tw/api/v1/rest/datastore/F-C0032-001?Authorization=CWB-E7D4764E-1727-4CE0-93C7-B6CA2298EF6D&format=JSON&locationName=%E8%87%BA%E5%8D%97%E5%B8%82&elementName=&sort=time&startTime=
         //台中方包案資料
         //https://datacenter.taichung.gov.tw/Swagger/OpenData/44ff471a-8bda-429d-b5ba-29eace7b05ed?limit=10
         //中央氣象局的砸碎!!彰化URL
+        //https://opendata.cwb.gov.tw/api/v1/rest/datastore/F-C0032-001?Authorization=CWB-E7D4764E-1727-4CE0-93C7-B6CA2298EF6D&format=JSON&locationName=%E5%8F%B0%E5%8D%97%E5%B8%82&sort=time&startTime=
         //https://opendata.cwb.gov.tw/api/v1/rest/datastore/F-C0032-001?Authorization=CWB-E7D4764E-1727-4CE0-93C7-B6CA2298EF6D&format=JSON&locationName=%E5%BD%B0%E5%8C%96%E7%B8%A3&sort=time&startTime=
 
                 //"https://datacenter.taichung.gov.tw/Swagger/OpenData/44ff471a-8bda-429d-b5ba-29eace7b05ed?limit=10";
@@ -144,6 +155,8 @@ public class MainActivity extends AppCompatActivity {
                 try {
                     JSONObject object = (JSONObject) new JSONTokener(String.valueOf(json)).nextValue();
                     JSONObject records = object.getJSONObject("records");
+                    //String TESTES=gsonFormat(records.getString("location"));
+                    //Log.e("GSON測試",TESTES);
                     JSONArray array1= records.getJSONArray("location");
 
                     //應該要?次(就結構性來說應該是不用!!)
@@ -216,6 +229,8 @@ public class MainActivity extends AppCompatActivity {
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
+
+
 
 
                 //台中方包案資料
@@ -295,6 +310,15 @@ public class MainActivity extends AppCompatActivity {
         //螢幕旋轉預設設定
         //setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR);
     }
+
+    //使用Gson
+    private String gsonFormat(String jsonStr) {
+        JsonParser parser = new JsonParser();
+        JsonElement je = parser.parse(jsonStr);
+        Gson gson = new GsonBuilder().setPrettyPrinting().serializeNulls().create();
+        return gson.toJson(je);
+    }
+
 
     private class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder>{
         public class ViewHolder extends RecyclerView.ViewHolder {
